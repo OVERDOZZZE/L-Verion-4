@@ -4,31 +4,155 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        /* Общие стили */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+            margin: 0;
+            display: flex; /* Добавляем свойство display: flex; для обертки страницы */
+        }
+
+        /* Левая навигационная панель */
+        .sidebar {
+            width: 200px;
+            background-color: #eee;
+            padding: 20px;
+            margin-right: 20px
+        }
+
+        /* Основное содержимое */
+        .content {
+            flex-grow: 1; /* Добавляем свойство flex-grow: 1; для растягивания содержимого на всю доступную ширину */
+        }
+
+        /* Заголовок */
+        h1 {
+            text-align: center;
+            margin-bottom:30px;
+            color: #333;
+        }
+
+        /* Стили для списка */
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Стили для ссылок */
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        /* Стили для пагинации */
+        .pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .pagination .step-links {
+            margin: 0 10px;
+        }
+
+        .pagination .step-links a {
+            margin: 0 5px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button:focus {
+            outline: none;
+        }
+    </style>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    {% for book in books %}
-    <ul>
-        <li>
-            <a href="{% url 'book_detail' book.pk %}">{{ book.title }}</a>
-            {{ book.author.name }}
-            {{ book.publisher.name }}
-            {{ book.publication_date }}
-        </li>
-    </ul>
-    {% endfor %}
-        <div class="pagination">
+    <div class="sidebar">
+        <div class="logo">
+            <h1>Library</h1>
+        </div>
+        <ul>
+            <li>
+                <button><a href="{% url 'login' %}">Login</a></button>
+            </li>
+            <li>
+                <button><a href="{% url 'addb' %}">Add book</a></button>
+            </li>
+            <li>
+                <button><a href="{% url 'adda' %}">Add author</a></button>
+            </li>
+            <li>
+                <button><a href="{% url 'addp' %}">Add publisher</a></button>
+            </li>
+        </ul>
+    </div>
 
+    <div class="content">
+        <h1>Book List</h1>
+
+        <div class="book-list">
+            {% for book in books %}
+            <ul>
+                <li>
+                    <a href="{% url 'book_detail' book.pk %}">{{ book.title }}</a>
+                    <p>Author: {{ book.author.name }}</p>
+                    <p>Publisher: {{ book.publisher.name }}</p>
+                    <p>Publication Date: {{ book.publication_date }}</p>
+                </li>
+            </ul>
+            {% endfor %}
+        </div>
+
+        <div class="pagination">
             <span class="step-links">
-                 {% if books.has_previous %}
-                <a href="?page={{ books.previous_page_number }}"><</a>
+                {% if books.has_previous %}
+                    <a href="?page={{ books.previous_page_number }}">&lt;</a>
                 {% endif %}
 
                 {% if books.has_next %}
-                    <a href="?page={{ books.next_page_number }}">></a>
+                    <a href="?page={{ books.next_page_number }}">&gt;</a>
                 {% endif %}
             </span>
         </div>
-
+    </div>
 </body>
 </html>
+

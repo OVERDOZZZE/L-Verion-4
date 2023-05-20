@@ -4,41 +4,154 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        /* Общие стили */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+            margin: 0;
+        }
+
+        /* Блок-контейнер */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: flex;
+        }
+
+        /* Левая часть */
+        .left {
+            flex: 1;
+            margin-right: 20px;
+        }
+
+        /* Правая часть */
+        .right {
+            flex: 1;
+        }
+
+        /* Заголовок */
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        /* Стили для параграфов */
+        p {
+            margin-bottom: 5px;
+        }
+
+        /* Стили для изображения */
+        img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        /* Стили для формы */
+        form {
+            margin-top: 20px;
+            margin-left: 20px
+        }
+
+        form input,
+        form button {
+            margin-bottom: 10px;
+            width: 350px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+
+        }
+        form select {
+            width: 370px;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+
+        }
+        form input[type="text"],
+        form select {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            outline: none;
+
+        }
+
+        form input[type="date"],
+        form button {
+            color: black;
+            cursor: pointer;
+            background-color: #f8f8f8;
+            border: 1px solid #ddd
+
+        }
+
+        form button {
+            padding: 12px;
+            transition: background-color 0.3s ease;
+            margin-top: 133px;
+            background-color: #007bff
+        }
+
+        form button:hover {
+            background-color: #0056b3;
+        }
+        .right h1 {
+            margin-left: 18px
+        }
+    </style>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <h1>{{ book.title }}</h1>
-    <p>Author: {{ book.author.name }}</p>
-    <p>Author email: {{ book.author.email }}</p>
-    <p>Publisher: {{ book.publisher.name }}</p>
-    <p>Publisher address: {{ book.publisher.address }}</p>
-    <p>Publication date: {{ book.publication_date }}</p>
-    <img src="{{ book.cover_photo.url }}" alt="" width="600">
-    {% if request.user.is_authenticated %}
-    <form method="POST" action="{% url 'update_book' book.id %}" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="text" id="title" name="title" value="{{ book.title }}">
+    <div class="container">
+        <div class="left">
+            <h1>{{ book.title }}</h1>
+            <p>Author: {{ book.author.name }}</p>
+            <p>Author email: {{ book.author.email }}</p>
+            <p>Publisher: {{ book.publisher.name }}</p>
+            <p>Publisher address: {{ book.publisher.address }}</p>
+            <p>Publication date: {{ book.publication_date }}</p>
+            <img src="{{ book.cover_photo.url }}" alt="" width="600">
+        </div>
+        {% if request.user.is_authenticated %}
+        <div class="right">
+            <h1>Change information</h1>
+            <form method="POST" action="{% url 'update_book' book.id %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="text" id="title" name="title" value="{{ book.title }}" placeholder="Title">
+                <input type="date" id="publication_date" name="publication_date" value="{{ date }}" placeholder="Publication Date">
+                <select name="author_id" id="author_id">
+                    {% for i in authors %}
+                        <option value="{{ i.id }}">{{ i.name }}</option>
+                    {% endfor %}
+                </select>
+                <select name="publisher_id" id="publisher_id">
+                    {% for i in publishers %}
+                        <option value="{{ i.id }}">{{ i.name }}</option>
+                    {% endfor %}
+                </select>
 
-        <select name="author_id" id="author_id">
-            {% for i in authors %}
-                <option value="{{ i.id }}">{{ i.name }}</option>
-            {% endfor %}
-        </select>
-
-        <select name="publisher_id" id="publisher_id">
-            {% for i in publishers %}
-                <option value="{{ i.id }}">{{ i.name }}</option>
-            {% endfor %}
-        </select>
-
-        <input type="date" id="publication_date" name="publication_date" value="{{ date }}">
-
-        <input type="file" id="cover_photo" name="cover_photo" value="{{ book.cover_photo }}">
-
-        <button type="submit">Update</button>
-    </form>
-    {% endif %}
+                <input type="file" id="cover_photo" name="cover_photo" value="{{ book.cover_photo }}" accept="image/*">
+                <button type="submit">Update</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
 </body>
 </html>
+
+
+
+
 
 
